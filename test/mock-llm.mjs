@@ -13,9 +13,11 @@ function decide({ userText, toolResultFor }) {
   const text = (userText ?? '').toLowerCase()
   if (toolResultFor) {
     if (toolResultFor === 'get_weather' || text.includes('weather')) return { kind: 'text', text: 'It looks warm and mostly clear in Mumbai right now. You will not need an umbrella today.' }
+    if (text.includes('shopping')) return { kind: 'text', text: 'Done. Your shopping list is saved in your Ora folder.' }
     return { kind: 'text', text: 'Done. I saved your note.' }
   }
   if (text.includes('weather')) return { kind: 'tool', lead: 'Let me check that for you.', name: 'get_weather', args: { location: 'Mumbai' } }
+  if (text.includes('shopping')) return { kind: 'tool', lead: '', name: 'write_file', args: { path: 'shopping-list.txt', content: 'Milk, eggs, bread and tea' } }
   if (text.includes('note')) return { kind: 'tool', lead: '', name: 'write_file', args: { path: 'hello.txt', content: 'hi from ora' } }
   if (text.includes('story')) return { kind: 'text', slow: 90, text: 'Once upon a time there was a small robot who loved to sing. Every morning it climbed the hill behind the village. It sang to the sun until the whole valley woke up. The villagers loved the songs. One day the robot forgot the words. It hummed instead and everyone joined in.' }
   return { kind: 'text', text: 'Sure thing. Here is a short reply for you.' }

@@ -16,7 +16,7 @@
   <img alt="Tested on Windows" src="https://img.shields.io/badge/tested%20on-Windows-0078d4">
 </p>
 
-<!-- SCREENSHOT: main window showing a conversation with a tool card and latency chips -->
+<!-- Screenshots are generated with: node test/readme-shots.mjs -->
 <p align="center">
   <img src="docs/screenshots/hero.png" alt="Ora main window" width="900">
 </p>
@@ -45,7 +45,7 @@
 
 ## Screenshots
 
-<!-- SCREENSHOTS: replace the files in docs/screenshots/ with the same names. Sizes are a guide. -->
+<!-- Retake any of these with: node test/readme-shots.mjs [main|orbs|approval] -->
 
 <table>
   <tr>
@@ -229,7 +229,8 @@ Tests drive the real built app in Electron with Playwright, using a throwaway pr
 | `npm run test:mic` | A fake microphone through voice detection, Whisper, the agent and speech: hands-free, without interruption, and push-to-talk. |
 | `npm run test:providers` | OpenRouter, OpenAI, Anthropic, Google and a custom server: request shapes, tool calls, model lists, key checks, error messages, key migration. |
 | `npm run test:layout` | A very long chat must scroll inside the chat area at small, normal and maximized sizes. |
-| `npm run screenshots` | Saves dark and light theme screenshots to your temp folder. Handy for the images above. |
+| `npm run screenshots` | Saves dark and light theme screenshots to your temp folder. A quick way to look at the UI. |
+| `node test/readme-shots.mjs` | Retakes the images in `docs/screenshots/` with demo chats, a neutral files path and a mock LLM, so nothing personal appears. Groups: `main`, `orbs`, `approval`. Set `ORA_DOCS_PROFILE` to a folder to reuse a warm GPU cache. |
 | `node test/icon.mjs` | The icon Windows actually shows for the window, and the title-bar mark. |
 | `node test/migrate.mjs` | The one-time move from the old `Vox` data folder, in a fake AppData. |
 | `node test/fresh-install.mjs` | A brand-new user: downloads Supertonic from Hugging Face, loads it and speaks. |
