@@ -1,4 +1,4 @@
-# Packaging config for `npm run dist` (Windows installer). Not yet verified end to end.
+# Packaging config for `npm run dist` (Windows NSIS installer, per-user, no admin needed). See README > Building and releasing.
 appId: dev.vivek.ora
 productName: Ora
 directories:

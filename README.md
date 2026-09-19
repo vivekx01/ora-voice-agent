@@ -10,10 +10,19 @@
 </p>
 
 <p align="center">
+  <a href="https://github.com/vivekx01/ora-voice-agent/releases/latest">
+    <img alt="Download Ora for Windows" src="https://img.shields.io/badge/Download-Ora%20for%20Windows-8b7cff?style=for-the-badge" height="46">
+  </a>
+  <br>
+  <sub>Windows 10 and 11 &nbsp;&middot;&nbsp; free and open source &nbsp;&middot;&nbsp; <a href="https://github.com/vivekx01/ora-voice-agent/releases">all releases</a> &nbsp;&middot;&nbsp; <a href="#quick-start">run from source</a></sub>
+</p>
+
+<p align="center">
   <img alt="Electron 44" src="https://img.shields.io/badge/Electron-44-47848f?logo=electron&logoColor=white">
   <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-5-3178c6?logo=typescript&logoColor=white">
   <img alt="On-device speech" src="https://img.shields.io/badge/speech-on--device%20WebGPU-8b7cff">
   <img alt="Tested on Windows" src="https://img.shields.io/badge/tested%20on-Windows-0078d4">
+  <a href="LICENSE"><img alt="MIT license" src="https://img.shields.io/badge/license-MIT-3fb950"></a>
 </p>
 
 <!-- Screenshots are generated with: node test/readme-shots.mjs -->
@@ -97,9 +106,100 @@ After that it starts in seconds. Then click the orb, or press `Ctrl+Shift+Space`
 | `npm start` | Runs the production build. |
 | `npm run stop` | Ends leftover Ora and dev-server processes from this folder. |
 | `npm run icons` | Regenerates the app icon files from the orb design. |
-| `npm run dist` | Builds a Windows installer with electron-builder. Not yet tested end to end. |
+| `npm run dist` | Builds the Windows installer into `dist/`. See [Building and releasing](#building-and-releasing). |
+| `npm run dist:dir` | Builds an unpacked app in `dist/win-unpacked/` that runs without installing. |
 
 </details>
+
+## Building and releasing
+
+### Build the installer
+
+```bash
+npm run dist
+```
+
+This builds the app and packs it with [electron-builder](https://www.electron.build). It takes about 3 minutes, and the first run also downloads Electron and the installer tools into a local cache. Requirements: Windows, Node 20.19 or newer (the last build was verified on Node 24), an internet connection for that first run, and about 1 GB of free disk space. Close any running copy of Ora first (`npm run stop` does it).
+
+Everything is written to `dist/`, which is not committed:
+
+| File | What it is |
+|---|---|
+| `Ora-Setup-<version>.exe` | The installer you share, about 144 MB. It installs per user (no administrator rights), lets people choose the folder, and creates shortcuts. |
+| `Ora-Setup-<version>.exe.blockmap`, `latest.yml` | Update metadata. Ignore them unless you add auto-update. |
+| `win-unpacked/` | Only with `npm run dist:dir`: the app unpacked, runnable without installing. |
+
+The name and version come from `package.json`, the icon from `build/icon.ico`, and the packaging settings from `electron-builder.yml`. The voice files are not inside the installer: Ora downloads them on first launch (about 380 MB), so users need internet once.
+
+### Test the build before shipping it
+
+```bash
+npm run dist:dir
+node test/packaged.mjs
+```
+
+`packaged.mjs` launches the real `dist/win-unpacked/Ora.exe` and checks that it starts, serves its files from inside the archive, loads both speech engines on the GPU, has all 15 tools, embeds the orb icon, and completes an agent turn. Also run `npm run typecheck` and the [tests](#development) you care about, for example `npm run test:agent`, `npm run test:mic` and `npm run test:providers`.
+
+The setup program itself is not covered by these tests. Before a public release, run the installer once on a clean machine or a virtual machine, and check the install, the shortcuts, the first-launch download and the uninstall.
+
+### Release checklist
+
+Replace `0.2.0` with your version. Use [semantic versioning](https://semver.org): patch for fixes, minor for new features, and while the version starts with `0.` treat every release as early.
+
+1. **Update your working copy.** `git checkout main` and `git pull`.
+2. **Bump the version** without creating a tag yet: `npm version 0.2.0 --no-git-tag-version`. This edits `package.json` and `package-lock.json`.
+3. **Write the release notes.** Copy the newest file in `docs/releases/` to `docs/releases/v0.2.0.md` and update it: highlights, download, requirements, known limitations, and what changed. Be honest about what is untested.
+4. **Check that a `LICENSE` file exists** and that the README status section is still accurate.
+5. **Build and test.** `npm run typecheck`, then `npm run dist:dir` and `node test/packaged.mjs`, then the full `npm run dist` to produce the final installer.
+6. **Get the checksum** of that exact file and paste it into the notes: `Get-FileHash dist\Ora-Setup-0.2.0.exe -Algorithm SHA256` in PowerShell.
+7. **Commit and tag.**
+   ```bash
+   git add package.json package-lock.json docs/releases/v0.2.0.md
+   git commit -m "Release v0.2.0"
+   git tag -a v0.2.0 -m "Ora 0.2.0"
+   git push origin main --tags
+   ```
+8. **Publish the release** (below).
+9. **Download it yourself** from the release page and run it once, to make sure the uploaded file is the one you tested.
+
+Do not rebuild after computing the checksum. If you rebuild, the checksum changes, so repeat steps 6 and 7 before publishing.
+
+### Publish on GitHub
+
+On the repository page, go to **Releases > Draft a new release**, then:
+
+1. Choose the tag you pushed (`v0.2.0`).
+2. Set the title, for example `Ora 0.2.0: a short description`.
+3. Paste the contents of `docs/releases/v0.2.0.md` as the description.
+4. Attach `dist/Ora-Setup-0.2.0.exe`. You do not need to attach the blockmap or `latest.yml`.
+5. Tick **Set as a pre-release** while the version is `0.x` or the installer is unsigned, then **Publish release**.
+
+With the [GitHub CLI](https://cli.github.com) (`gh`), the same thing is one command:
+
+```bash
+gh release create v0.2.0 dist/Ora-Setup-0.2.0.exe --title "Ora 0.2.0" --notes-file docs/releases/v0.2.0.md --prerelease
+```
+
+### Code signing (optional)
+
+The installer is not code-signed, so Windows SmartScreen shows "Windows protected your PC" the first time someone runs it. Users can click **More info** and then **Run anyway**, and your release notes should say so. To remove the warning, get a code-signing certificate and build with it:
+
+```powershell
+$env:CSC_LINK = "C:\certs\ora-signing.pfx"
+$env:CSC_KEY_PASSWORD = "your-password"
+npm run dist
+```
+
+Never commit the certificate or its password.
+
+### Good to know
+
+- The installed app and `npm run dev` share the same data folder (`%APPDATA%\Ora`), and only one copy of Ora can run at a time, so close one before opening the other.
+- Uninstalling does not delete `%APPDATA%\Ora`. Delete that folder by hand to remove chats, settings and the voice files.
+- `dist/` inside a OneDrive folder syncs about 150 MB per build. Consider moving it out of OneDrive.
+- To change the icon, edit `HUE` in `scripts/make-icons.mjs` and run `npm run icons`, or replace the files in `build/`.
+- Only Windows is set up. macOS and Linux would need their own targets in `electron-builder.yml` and were not tried.
+- Warnings such as "duplicate dependency references" and "signing with signtool.exe" in the build log are harmless.
 
 ## How it works
 
@@ -231,6 +331,7 @@ Tests drive the real built app in Electron with Playwright, using a throwaway pr
 | `npm run test:layout` | A very long chat must scroll inside the chat area at small, normal and maximized sizes. |
 | `npm run screenshots` | Saves dark and light theme screenshots to your temp folder. A quick way to look at the UI. |
 | `node test/readme-shots.mjs` | Retakes the images in `docs/screenshots/` with demo chats, a neutral files path and a mock LLM, so nothing personal appears. Groups: `main`, `orbs`, `approval`. Set `ORA_DOCS_PROFILE` to a folder to reuse a warm GPU cache. |
+| `node test/packaged.mjs` | The packaged `.exe` from `npm run dist:dir`: starts, loads both engines, all 15 tools, embedded icon, and a full agent turn. |
 | `node test/icon.mjs` | The icon Windows actually shows for the window, and the title-bar mark. |
 | `node test/migrate.mjs` | The one-time move from the old `Vox` data folder, in a fake AppData. |
 | `node test/fresh-install.mjs` | A brand-new user: downloads Supertonic from Hugging Face, loads it and speaks. |
@@ -269,7 +370,7 @@ docs/screenshots/      images used in this README
 
 - **Tested on Windows only.** The code is cross-platform in principle, but nothing else has been tried.
 - **Not yet checked against real provider accounts.** OpenAI, Anthropic and Google were tested against a mock of each API, not with live keys. The model IDs in the "Recommended" lists for those three are best guesses, and once you add a key the lists are filtered to what your account can use. If a provider rejects a request, the error message is shown in the chat.
-- **The Windows installer is untested.** `npm run dist` is configured but has not been run.
+- **The installer has been built but not installed.** `npm run dist` works and the packaged app passes its smoke test, but I have not run the setup program itself, so the install wizard, shortcuts and uninstaller are unchecked. It is also unsigned.
 - **A GPU is strongly recommended.** Without WebGPU, speech and hearing fall back to the CPU and are much slower.
 
 ## Credits
@@ -281,4 +382,4 @@ docs/screenshots/      images used in this README
 
 ## License
 
-MIT, as declared in `package.json`. Third-party models keep their own licenses, listed above.
+MIT. See [LICENSE](LICENSE). Third-party models keep their own licenses, listed above.
