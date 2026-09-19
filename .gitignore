@@ -6,3 +6,4 @@ dist/
 src/renderer/public/ort/
 src/renderer/public/vad/
 test-artifacts/
+*.tsbuildinfo

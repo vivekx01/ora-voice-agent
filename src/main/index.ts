@@ -1,12 +1,14 @@
 import { app, BrowserWindow, nativeTheme, session, shell } from 'electron'
 import { existsSync, renameSync, rmSync } from 'node:fs'
 import { join } from 'node:path'
+import appIcon from '../../resources/icon.png?asset'
 import { applyWindowSettings, registerHotkey, registerIpc, shutdownIpc } from './ipc'
 import { paths } from './paths'
 import { registerProtocolHandler, registerSchemes } from './protocol'
 import { getSettings } from './settings'
 
 app.setName('Ora')
+app.setAppUserModelId('dev.vivek.ora') // groups the taskbar icon and notifications under Ora on Windows
 
 // The app used to be called Vox. Move its data (voice files, settings, chats, memories) to the new
 // folder once, so nothing is lost and the 380 MB voice files aren't downloaded again.
@@ -63,6 +65,7 @@ function createWindow(): void {
     show: false,
     backgroundColor: bg(),
     title: 'Ora',
+    icon: appIcon,
     titleBarStyle: 'hidden',
     titleBarOverlay: { color: dark ? '#0b0c10' : '#f5f6fa', symbolColor: dark ? '#a1a7b5' : '#4a5060', height: 44 },
     alwaysOnTop: settings.general.alwaysOnTop,

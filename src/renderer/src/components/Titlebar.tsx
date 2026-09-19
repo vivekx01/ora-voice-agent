@@ -1,4 +1,5 @@
 import { PanelLeft } from 'lucide-react'
+import icon from '../assets/icon.png'
 import { useProviderReady, useStore, type EngineStatus } from '../store'
 
 function Pill({ label, status, onClick }: { label: string; status: EngineStatus; onClick?: () => void }): React.JSX.Element {
@@ -25,7 +26,7 @@ export function Titlebar(): React.JSX.Element {
       <button className="icon-btn" onClick={() => set({ sidebarOpen: !open })} title="Toggle sidebar (Ctrl+B)" aria-label="Toggle sidebar">
         <PanelLeft size={18} />
       </button>
-      <div className="brand"><span className="brand-mark" /> Ora</div>
+      <div className="brand"><img className="brand-mark" src={icon} alt="" draggable={false} /> Ora</div>
       <div className="grow" />
       <button className={`pill ${hasKey ? 'ok' : 'warn'}`} onClick={() => openSettings('model')} title="Change model">
         <span className="dot" />

@@ -3,6 +3,7 @@ import { writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { app, BrowserWindow, dialog, globalShortcut, ipcMain, nativeTheme, Notification, shell } from 'electron'
 import { isProviderConfigured, providerInfo, type AgentEvent, type ChatMessage, type Conversation, type DeepPartial, type ProviderId, type Settings } from '@shared/types'
+import appIcon from '../../resources/icon.png?asset'
 import { runAgent } from './agent'
 import { TOOL_INFOS } from './agent/tools'
 import { createConversation, deleteConversation, getConversation, listConversations, saveConversation } from './conversations'
@@ -143,7 +144,7 @@ export function registerIpc(deps: IpcDeps): void {
       onTimer: (label, seconds) => {
         const handle = setTimeout(() => {
           timers.delete(handle)
-          new Notification({ title: 'Timer finished', body: label }).show()
+          new Notification({ title: 'Timer finished', body: label, icon: appIcon }).show()
           send('timer:fired', { label })
         }, seconds * 1000)
         timers.add(handle)

@@ -41,7 +41,7 @@ input, textarea, select { font: inherit; color: inherit; }
 .titlebar > * { pointer-events: auto; -webkit-app-region: no-drag; }
 .titlebar .grow { flex: 1; pointer-events: none; -webkit-app-region: drag; }
 .brand { display: flex; align-items: center; gap: 9px; font-weight: 650; letter-spacing: 0.01em; }
-.brand-mark { width: 22px; height: 22px; border-radius: 8px; background: conic-gradient(from 210deg, var(--accent), hsl(calc(var(--accent-h) + 70) 90% 70%), var(--accent)); box-shadow: 0 0 18px var(--accent-soft); }
+.brand-mark { width: 24px; height: 24px; border-radius: 7px; display: block; user-select: none; -webkit-user-drag: none; }
 
 .icon-btn { width: 32px; height: 32px; display: inline-grid; place-items: center; border-radius: var(--r-sm); color: var(--text-2); transition: background 0.15s, color 0.15s; }
 .icon-btn:hover { background: var(--accent-soft); color: var(--text); }
