@@ -1,0 +1,74 @@
+:root {
+  --font: 'Inter Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --mono: 'JetBrains Mono Variable', ui-monospace, 'Cascadia Code', Consolas, monospace;
+  --r-xs: 6px;
+  --r-sm: 9px;
+  --r-md: 13px;
+  --r-lg: 18px;
+  --r-xl: 28px;
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --titlebar: 44px;
+  --accent-h: 252;
+}
+
+[data-accent='violet'] { --accent-h: 252; }
+[data-accent='blue'] { --accent-h: 216; }
+[data-accent='teal'] { --accent-h: 172; }
+[data-accent='rose'] { --accent-h: 340; }
+[data-accent='amber'] { --accent-h: 36; }
+
+[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #0b0c10;
+  --bg-2: #0e1015;
+  --panel: #12141b;
+  --panel-2: #171a22;
+  --elev: #1c202a;
+  --line: rgba(255, 255, 255, 0.07);
+  --line-2: rgba(255, 255, 255, 0.13);
+  --text: #eceef4;
+  --text-2: #a5acbc;
+  --text-3: #6d7486;
+  --accent: hsl(var(--accent-h) 100% 76%);
+  --accent-strong: hsl(var(--accent-h) 95% 68%);
+  --accent-ink: #0b0c10;
+  --accent-soft: hsl(var(--accent-h) 100% 76% / 0.13);
+  --accent-line: hsl(var(--accent-h) 100% 76% / 0.35);
+  --ok: #3ddc97;
+  --warn: #ffb454;
+  --bad: #ff6b7a;
+  --shadow: 0 18px 60px rgba(0, 0, 0, 0.55);
+  --shadow-sm: 0 4px 18px rgba(0, 0, 0, 0.35);
+  --glass: rgba(18, 20, 27, 0.78);
+  --user-bubble: hsl(var(--accent-h) 45% 26%);
+  --user-bubble-text: #f3f1ff;
+  --scrim: rgba(4, 5, 8, 0.62);
+}
+
+[data-theme='light'] {
+  color-scheme: light;
+  --bg: #f5f6fa;
+  --bg-2: #eff1f6;
+  --panel: #ffffff;
+  --panel-2: #f8f9fc;
+  --elev: #ffffff;
+  --line: rgba(20, 24, 40, 0.08);
+  --line-2: rgba(20, 24, 40, 0.15);
+  --text: #171a24;
+  --text-2: #4a5164;
+  --text-3: #7d8497;
+  --accent: hsl(var(--accent-h) 72% 52%);
+  --accent-strong: hsl(var(--accent-h) 75% 46%);
+  --accent-ink: #ffffff;
+  --accent-soft: hsl(var(--accent-h) 80% 52% / 0.1);
+  --accent-line: hsl(var(--accent-h) 80% 52% / 0.4);
+  --ok: #12a06a;
+  --warn: #c77a12;
+  --bad: #d63a4c;
+  --shadow: 0 18px 60px rgba(30, 36, 70, 0.18);
+  --shadow-sm: 0 4px 18px rgba(30, 36, 70, 0.1);
+  --glass: rgba(255, 255, 255, 0.82);
+  --user-bubble: hsl(var(--accent-h) 80% 52%);
+  --user-bubble-text: #ffffff;
+  --scrim: rgba(20, 24, 40, 0.38);
+}

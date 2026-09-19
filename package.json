@@ -1,0 +1,61 @@
+{
+  "name": "ora-voice-agent",
+  "productName": "Ora",
+  "version": "0.1.0",
+  "description": "On-device voice agent: Supertonic TTS, Whisper STT, LangGraph agent over OpenRouter",
+  "main": "./out/main/index.js",
+  "author": "vivek",
+  "license": "MIT",
+  "scripts": {
+    "assets": "node scripts/copy-assets.mjs",
+    "postinstall": "install-electron && node scripts/copy-assets.mjs",
+    "dev": "npm run assets && electron-vite dev --watch",
+    "build": "npm run assets && electron-vite build",
+    "start": "electron-vite preview",
+    "typecheck": "tsc --noEmit -p tsconfig.node.json && tsc --noEmit -p tsconfig.web.json",
+    "dist": "npm run build && electron-builder --win",
+    "test:agent": "npm run build && node test/agent.mjs",
+    "test:mic": "npm run build && node test/mic.mjs",
+    "screenshots": "npm run build && node test/shots.mjs",
+    "test:layout": "npm run build && node test/layout.mjs",
+    "stop": "node scripts/stop.mjs",
+    "test:providers": "npm run build && node test/providers.mjs"
+  },
+  "dependencies": {
+    "@fontsource-variable/inter": "^5.2.0",
+    "@fontsource-variable/jetbrains-mono": "^5.2.0",
+    "@huggingface/transformers": "^4.3.0",
+    "@langchain/anthropic": "^1.5.10",
+    "@langchain/community": "^1.1.29",
+    "@langchain/core": "^1.2.11",
+    "@langchain/google-genai": "^2.3.2",
+    "@langchain/langgraph": "^1.4.16",
+    "@langchain/openai": "^1.5.13",
+    "@ricky0123/vad-web": "^0.0.31",
+    "cheerio": "^1.2.0",
+    "duck-duck-scrape": "^2.2.7",
+    "lucide-react": "^1.47.0",
+    "onnxruntime-web": "1.31.0-dev.20260914-8d85527a0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "react-markdown": "^10.1.0",
+    "zod": "^4.6.5",
+    "zustand": "^5.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.2",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "@vitejs/plugin-react": "^5.0.0",
+    "@webgpu/types": "^0.1.74",
+    "electron": "^44.4.3",
+    "electron-builder": "^26.0.0",
+    "electron-vite": "^5.0.0",
+    "playwright-core": "^1.63.0",
+    "typescript": "^7.0.2",
+    "vite": "^7.0.0"
+  },
+  "overrides": {
+    "onnxruntime-web": "1.31.0-dev.20260914-8d85527a0"
+  }
+}
