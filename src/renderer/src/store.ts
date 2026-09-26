@@ -68,6 +68,7 @@ interface State {
   conversations: ConversationSummary[]
   active: Conversation
   voice: VoiceState
+  viewMode: 'chat' | 'voice'
   micOn: boolean
   caption: string
   approvals: PendingApproval[]
@@ -109,6 +110,7 @@ export const useStore = create<State>((set, get) => ({
   conversations: [],
   active: emptyConversation(),
   voice: 'booting',
+  viewMode: 'chat',
   micOn: false,
   caption: '',
   approvals: [],

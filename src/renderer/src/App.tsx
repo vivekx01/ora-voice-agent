@@ -5,6 +5,7 @@ import { SettingsModal } from './components/settings/SettingsModal'
 import { Sidebar } from './components/Sidebar'
 import { Titlebar } from './components/Titlebar'
 import { Toasts } from './components/Toasts'
+import { VoiceMode } from './components/VoiceMode'
 import { useStore } from './store'
 import { voice } from './voice/controller'
 
@@ -17,6 +18,7 @@ export function App(): React.JSX.Element {
   const loaded = useStore((s) => s.loaded)
   const theme = useStore((s) => s.settings.ui.theme)
   const accent = useStore((s) => s.settings.ui.accent)
+  const viewMode = useStore((s) => s.viewMode)
 
   useEffect(() => {
     void useStore.getState().init().then(() => {
@@ -49,6 +51,7 @@ export function App(): React.JSX.Element {
         void voice.pttDown()
       } else if (e.key === 'Escape' && !s.settingsOpen) {
         if (s.voice === 'thinking' || s.voice === 'speaking' || s.voice === 'hearing') voice.interrupt()
+        else if (s.viewMode === 'voice') voice.exitVoiceMode()
       } else if (mod && e.key === ',') {
         e.preventDefault()
         s.openSettings()
@@ -79,8 +82,14 @@ export function App(): React.JSX.Element {
       <Titlebar />
       <Sidebar />
       <main className="main">
-        <Chat />
-        <Dock />
+        {viewMode === 'voice' ? (
+          <VoiceMode />
+        ) : (
+          <>
+            <Chat />
+            <Dock />
+          </>
+        )}
       </main>
       <SettingsModal />
       <Toasts />

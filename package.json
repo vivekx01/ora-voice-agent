@@ -1,7 +1,7 @@
 {
   "name": "ora-voice-agent",
   "productName": "Ora",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Private voice assistant: on-device speech (Supertonic + Whisper) with a LangGraph agent on OpenRouter, OpenAI, Anthropic, Google or a local model",
   "main": "./out/main/index.js",
   "author": "vivek",

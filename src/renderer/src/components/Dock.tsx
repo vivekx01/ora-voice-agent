@@ -41,7 +41,7 @@ export function Dock(): React.JSX.Element {
 
   const orbPress = (): void => {
     if (busy) return voice.interrupt()
-    if (mode === 'vad') void voice.setMic(!micOn)
+    if (mode === 'vad') voice.enterVoiceMode()
   }
 
   const label = liveCaptions && caption ? caption : LABEL[state]
@@ -62,7 +62,14 @@ export function Dock(): React.JSX.Element {
             title={mode === 'ptt' ? 'Hold to talk' : micOn ? 'Stop listening' : 'Start listening'}
             disabled={!sttReady && !busy}
             onClick={mode === 'vad' || busy ? orbPress : undefined}
-            onPointerDown={mode === 'ptt' && !busy ? () => void voice.pttDown() : undefined}
+            onPointerDown={
+              mode === 'ptt' && !busy
+                ? () => {
+                    voice.enterVoiceMode()
+                    void voice.pttDown()
+                  }
+                : undefined
+            }
             onPointerUp={mode === 'ptt' ? () => void voice.pttUp() : undefined}
             onPointerLeave={mode === 'ptt' && state === 'hearing' ? () => void voice.pttUp() : undefined}
           >

@@ -19,11 +19,10 @@ function Hero(): React.JSX.Element {
   const enginesReady = useStore((s) => s.tts.state === 'ready' && s.stt.state === 'ready')
   const providerReady = useProviderReady()
   const ready = enginesReady && providerReady
-  const micOn = useStore((s) => s.micOn)
 
   return (
     <div className="hero">
-      <button className="orb-hero" onClick={() => (ready ? void voice.setMic(!micOn) : undefined)} aria-label="Toggle microphone" style={{ borderRadius: '50%', lineHeight: 0 }}>
+      <button className="orb-hero" onClick={() => (ready ? voice.enterVoiceMode() : undefined)} aria-label="Start voice mode" style={{ borderRadius: '50%', lineHeight: 0 }}>
         <Orb size={230} state={state} />
       </button>
       <h1>{userName ? `Hi ${userName}. What's up?` : "Hi, what's up?"}</h1>

@@ -89,6 +89,16 @@ export class MicListener {
     if (this.vad?.listening) await this.vad.pause()
   }
 
+  // Ends the current segment right now and hands back whatever audio was captured, as if
+  // the user had released push-to-talk - lets the user cut off a VAD listen that noise is
+  // keeping open (or just wants to stop and let the answer proceed sooner).
+  async forceEnd(): Promise<void> {
+    if (!this.vad?.listening) return
+    this.vad.setOptions({ submitUserSpeechOnPause: true })
+    await this.vad.pause()
+    this.vad.setOptions({ submitUserSpeechOnPause: this.opts?.mode === 'ptt' })
+  }
+
   setStrict(strict: boolean): void {
     if (this.strict === strict) return
     this.strict = strict

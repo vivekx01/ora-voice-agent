@@ -271,6 +271,13 @@ class VoiceController {
     }
   }
 
+  // Cuts a VAD listen short (e.g. background noise won't let it detect silence) and submits
+  // whatever's been captured so far, same as releasing push-to-talk.
+  async stopListening(): Promise<void> {
+    if (cfg().stt.mode !== 'vad' || st().voice !== 'hearing') return
+    await this.mic.forceEnd()
+  }
+
   async pttUp(): Promise<void> {
     if (cfg().stt.mode !== 'ptt') return
     await this.mic.pause()
@@ -319,6 +326,17 @@ class VoiceController {
     } finally {
       this.utteranceBusy = false
     }
+  }
+
+  // ---------- voice mode (fullscreen orb + transcript view) ----------
+
+  enterVoiceMode(): void {
+    set({ viewMode: 'voice' })
+    if (cfg().stt.mode === 'vad' && !st().micOn) void this.setMic(true)
+  }
+
+  exitVoiceMode(): void {
+    set({ viewMode: 'chat' })
   }
 
   private onHotkey(): void {
